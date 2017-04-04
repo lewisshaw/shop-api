@@ -18,12 +18,54 @@ class UpsertCartProduct implements ServerMiddlewareInterface
 
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $cartId = md5(time() + rand(0, 100));
-        $query = 'INSERT INTO Cart (cartId) VALUES (:cartId)';
-        $this->dbConn->executeUpdate($query, ['cartId' => $cartId]);
+        $cartId = $request->getAttribute('cartId');
+        $product = json_decode($request->getBody(), true);
+        if (!isset($product['productId']) || !isset($product['quantity'])) {
+            $response = new JsonResponse([
+                'error' => 'Invalid request',
+            ]);
+            return $response->withStatus(400);
+        }
+        $productId = $product['productId'];
+        $quantity  = $product['quantity'];
+
+        if ($quantity <= 0) {
+            $query = 'DELETE FROM CartProduct WHERE cartId = :cartId and productId = :productId';
+            $this->dbConn->executeUpdate($query, [':cartId' => $cartId, ':productId' => $productId]);
+            return new JsonResponse([
+                'cartId' => $cartId,
+                'productId' => $productId,
+                'quantity' => 0,
+            ]);
+        }
+
+        $cartProductExists = $this->dbConn->fetchColumn(
+            'SELECT count(*) FROM CartProduct where cartId = :cartId AND productId = :productId',
+            [':productId' => $productId, ':cartId' => $cartId]
+        );
+        if ($cartProductExists) {
+            $query = 'UPDATE CartProduct SET quantity = :quantity
+                       WHERE productId = :productId and cartId = :cartId';
+
+            $this->dbConn->executeUpdate($query, [':quantity' => $quantity, ':productId' => $productId, ':cartId' => $cartId]);
+            return new JsonResponse([
+                'cartId' => $cartId,
+                'productId' => $productId,
+                'quantity' => $quantity,
+            ]);
+        }
+        $query = 'INSERT INTO CartProduct (cartId, productId, quantity)
+                       VALUES (:cartId, :productId, :quantity)';
+        $this->dbConn->executeUpdate($query, [
+            ':cartId' => $cartId,
+            ':productId' => $productId,
+            ':quantity' => $quantity,
+        ]);
 
         return new JsonResponse([
             'cartId' => $cartId,
+            'productId' => $productId,
+            'quantity' => $quantity,
         ]);
     }
 }
