@@ -7,7 +7,7 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface as ServerMiddlewareInterfa
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
-class CreateCart implements ServerMiddlewareInterface
+class UpsertCartProduct implements ServerMiddlewareInterface
 {
     private $dbConn;
 

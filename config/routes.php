@@ -26,6 +26,8 @@
  * );
  */
 
-$app->get('/cart', Cart\Action\CreateCart::class, 'create-cart');
+$app->get('/cart/{cartId:[a-zA-Z0-9]+}', Cart\Action\GetCart::class, 'get-cart');
+$app->post('/cart', Cart\Action\CreateCart::class, 'create-cart');
+$app->post('/cart/{cartId:[a-zA-Z0-9]+}/products', Cart\Action\UpsertCartProduct::class, 'upsert-cart-product');
 $app->get('/products', Products\Action\GetProducts::class, 'get-products');
 $app->get('/products/{productId:[0-9]+}', Products\Action\GetProduct::class, 'get-product');

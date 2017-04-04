@@ -28,6 +28,8 @@ class ConfigProvider
         return [
             'factories'  => [
                 Action\CreateCart::class => Action\CreateCartFactory::class,
+                Action\GetCart::class => Action\GetCartFactory::class,
+                Action\UpsertCartProduct::class => Action\UpsertCartProductFactory::class,
             ],
         ];
     }

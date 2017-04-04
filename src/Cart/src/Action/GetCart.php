@@ -20,21 +20,38 @@ class GetCart implements ServerMiddlewareInterface
     {
         $cartId = $request->getAttribute('cartId');
 
-        $query = 'SELECT productId, title, description, price
-                    FROM 
+        $query = 'SELECT count(*) as cartFound FROM Cart where cartId = :cartId';
+        $cartFound = $this->dbConn->fetchColumn($query, [':cartId' => $cartId]);
+        if (!$cartFound) {
+            $response = new JsonResponse([
+                'error' => 'Cart not found',
+            ]);
+            return $response->withStatus(404);
+        }
+
+        $query = 'SELECT p.productId, p.title, p.price, cp.quantity
+                    FROM Product as p
+              INNER JOIN CartProduct as cp ON p.productId = cp.productId
+                   WHERE cp.cartId = :cartId';
+
+        $products = $this->dbConn->fetchAll($query, [':cartId' => $cartId]);
+
+        $total = 0;
+        foreach ($products as $product) {
+            $total += $product['price'];
+        }
+        $total = $total / 100;
+
+        $products = array_map(function($product) {
+            $product['price'] = $product['price'] / 100;
+            return $product;
+        }, $products);
 
         return new JsonResponse([
-            'cartId' => 1234,
+            'cartId' => $cartId,
             'cart' => [
-                'total' => '123.44',
-                'products' => [
-                    [
-                        'title' => 'Computer',
-                    ],
-                    [
-                        'title' => 'Laptop',
-                    ],
-                ]
+                'total' => $total,
+                'products' => $products,
             ],
         ]);
     }
