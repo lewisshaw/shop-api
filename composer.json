@@ -30,7 +30,8 @@
         "psr-4": {
             "Cart\\": "src/Cart/src/",
             "Products\\": "src/Products/src/",
-            "Database\\": "src/Database/src/"
+            "Database\\": "src/Database/src/",
+            "Middleware\\": "src/Middleware/src"
         }
     },
     "scripts": {
