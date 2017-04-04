@@ -44,6 +44,7 @@ class GetCart implements ServerMiddlewareInterface
 
         $products = array_map(function($product) {
             $product['price'] = $product['price'] / 100;
+            $product['quantity'] = (int) $product['quantity'];
             return $product;
         }, $products);
 

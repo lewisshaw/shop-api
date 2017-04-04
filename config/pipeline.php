@@ -36,10 +36,10 @@ $app->pipe(ServerUrlMiddleware::class);
 
 // Register the routing middleware in the middleware pipeline
 $app->pipeRoutingMiddleware();
+$app->pipe(Cors::class);
 $app->pipe(ImplicitHeadMiddleware::class);
 $app->pipe(ImplicitOptionsMiddleware::class);
 $app->pipe(UrlHelperMiddleware::class);
-$app->pipe(Cors::class);
 
 // Add more middleware here that needs to introspect the routing results; this
 // might include:

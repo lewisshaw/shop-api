@@ -13,6 +13,8 @@ class Cors implements MiddlewareInterface
     {
         $response = $delegate->process($request);
 
-        return $response->withHeader('Access-Control-Allow-Origin', 'http://localhost:1234');
+        $response = $response->withHeader('Access-Control-Allow-Origin', 'http://localhost:1234');
+        $response = $response->withHeader('Access-Control-Allow-Headers', 'Content-Type');
+        return $response;
     }
 }

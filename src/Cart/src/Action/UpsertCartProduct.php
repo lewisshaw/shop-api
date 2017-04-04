@@ -29,6 +29,15 @@ class UpsertCartProduct implements ServerMiddlewareInterface
         $productId = $product['productId'];
         $quantity  = $product['quantity'];
 
+        $query = 'SELECT count(*) as cartFound FROM Cart where cartId = :cartId';
+        $cartFound = $this->dbConn->fetchColumn($query, [':cartId' => $cartId]);
+        if (!$cartFound) {
+            $response = new JsonResponse([
+                'error' => 'Cart not found',
+            ]);
+            return $response->withStatus(404);
+        }
+
         if ($quantity <= 0) {
             $query = 'DELETE FROM CartProduct WHERE cartId = :cartId and productId = :productId';
             $this->dbConn->executeUpdate($query, [':cartId' => $cartId, ':productId' => $productId]);
