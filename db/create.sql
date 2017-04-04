@@ -5,19 +5,17 @@ CREATE TABLE Cart (
 );
 
 CREATE TABLE Product (
-    productId int auto_increment,
+    productId integer primary key autoincrement,
     title varchar(100),
     description text,
-    price int,
-    primary key (productId)
+    price int
 );
 
 CREATE TABLE CartProduct (
-    cartProductId int auto_increment,
+    cartProductId integer primary key autoincrement,
     cartId varchar(32),
     productId int,
-    quantity int,
-    primary key (cartProductId)
+    quantity int
 );
 
 INSERT INTO Product (title, description, price) VALUES

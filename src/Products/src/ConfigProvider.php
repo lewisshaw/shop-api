@@ -27,6 +27,8 @@ class ConfigProvider
     {
         return [
             'factories'  => [
+                Action\GetProducts::class => Action\GetProductsFactory::class,
+                Action\GetProduct::class => Action\GetProductFactory::class,
             ],
         ];
     }

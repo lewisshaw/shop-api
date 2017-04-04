@@ -19,6 +19,10 @@ class GetCart implements ServerMiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $cartId = $request->getAttribute('cartId');
+
+        $query = 'SELECT productId, title, description, price
+                    FROM 
+
         return new JsonResponse([
             'cartId' => 1234,
             'cart' => [

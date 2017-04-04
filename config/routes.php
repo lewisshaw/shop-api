@@ -27,3 +27,5 @@
  */
 
 $app->get('/cart', Cart\Action\CreateCart::class, 'create-cart');
+$app->get('/products', Products\Action\GetProducts::class, 'get-products');
+$app->get('/products/{productId:[0-9]+}', Products\Action\GetProduct::class, 'get-product');
