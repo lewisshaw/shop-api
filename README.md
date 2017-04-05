@@ -1,5 +1,6 @@
 # DB Setup #
 sqlite db/app.db
+
 sqlite>.read db/create.sql
 
 
